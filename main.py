@@ -1,5 +1,6 @@
-from deposito_strumenti import DepositoStrumenti
 from datetime import datetime
+from deposito_strumenti import DepositoStrumenti
+
 
 def menu():
     print("\n--- MENU DEPOSITO STRUMENTI ---")
@@ -12,21 +13,28 @@ def menu():
     print("7. Esci")
     return input("Scegli un'opzione >> ")
 
+
 def main():
-    deposito = DepositoStrumenti("Deposito Strumenti Civico", "Alessandro Visconti")
+    deposito = DepositoStrumenti(
+        "Deposito Strumenti Civico", "Alessandro Visconti"
+    )
 
     while True:
         scelta = menu()
 
         if scelta == "1":
             nuovo_responsabile = input("Inserisci il nuovo responsabile: ")
-            # TODO: Aggiorna responsabile nel sistema
+            deposito.responsabile = nuovo_responsabile
+            print(f"Responsabile aggiornato a {nuovo_responsabile}")
 
         elif scelta == "2":
             while True:
                 try:
-                    file_path = input("Inserisci il path del file da caricare: ").strip()
+                    file_path = input(
+                        "Inserisci il path del file da caricare: "
+                    ).strip()
                     deposito.carica_file_strumenti(file_path)
+                    print(f"{len(deposito.strumenti)} strumenti caricati.")
                     break
                 except Exception as e:
                     print(e)
@@ -38,27 +46,35 @@ def main():
                 anno_acquisto = int(input("Anno di acquisto: ").strip())
                 valore = float(input("Valore (euro): ").strip())
             except ValueError:
-                print("Errore: inserire valori numerici validi per anno e valore.")
+                print(
+                    "Errore: inserire valori numerici validi per anno e valore."
+                )
                 continue
-            strumento = deposito.aggiungi_strumento(tipo, marca, anno_acquisto, valore)
+            strumento = deposito.aggiungi_strumento(
+                tipo, marca, anno_acquisto, valore
+            )
             print(f"Strumento aggiunto: {strumento}")
 
         elif scelta == "4":
             strumenti_ordinati = deposito.strumenti_ordinati_per_marca()
             for s in strumenti_ordinati:
-                print(f'- {s}')
+                print(f"- {s}")
 
         elif scelta == "5":
             id_strumento = input("ID strumento: ")
             cognome_allievo = input("Cognome allievo: ")
             data = datetime.now().date()
             try:
-                prestito = deposito.nuovo_prestito(data, id_strumento, cognome_allievo)
+                prestito = deposito.nuovo_prestito(
+                    data, id_strumento, cognome_allievo
+                )
                 print(f"Prestito andato a buon fine: {prestito}")
             except Exception as e:
                 print(e)
 
         elif scelta == "6":
+            for p in deposito.prestiti:
+                print(f"- {p}")
             id_prestito = input("ID prestito da terminare: ")
             try:
                 deposito.termina_prestito(id_prestito)
@@ -71,6 +87,7 @@ def main():
             break
         else:
             print("Opzione non valida!")
+
 
 if __name__ == "__main__":
     main()
